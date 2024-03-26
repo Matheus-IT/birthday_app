@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key, required this.title});
@@ -10,10 +12,53 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  static const minPasswordLength = 8;
   final _formKey = GlobalKey<FormState>();
-  String _enteredEmail = '';
-  String _enteredPassword = '';
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isLoadingAuthentication = false;
+
+  String? emailValidator(String? enteredEmail) {
+    if (enteredEmail == null || enteredEmail.trim().isEmpty || !enteredEmail.contains('@')) {
+      return 'Por favor, digite um endereço de email válido';
+    }
+    return null;
+  }
+
+  String? passwordValidator(String? enteredPassword) {
+    if (enteredPassword == null || enteredPassword.trim().length < minPasswordLength) {
+      return 'Senhas devem ter pelo menos $minPasswordLength caracteres';
+    }
+    return null;
+  }
+
+  void handleSubmitLoginForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    print('Email ${_emailController.text}');
+    print('Password ${_passwordController.text}');
+
+    // final response = await http.post(
+    //   Uri.parse('http://10.0.2.2:8000/api/login/'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, String>{
+    //     'email': _emailController.text,
+    //     'password': _passwordController.text,
+    //   }),
+    // );
+
+    // if (response.statusCode == 200) {
+    //   // If the server returns a 200 OK response, parse the JSON.
+    //   print(jsonDecode(response.body)['token']);
+    // } else {
+    //   // If the server did not return a 200 OK response, throw an exception.
+    //   print('Failed to login');
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,46 +91,32 @@ class _AuthScreenState extends State<AuthScreen> {
                         children: [
                           TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Email Address',
+                              labelText: 'Email',
                             ),
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty || !value.contains('@')) {
-                                return 'Please enter a valid email address';
-                              }
-                              return null;
-                            },
-                            onSaved: (newValue) {
-                              _enteredEmail = newValue!;
-                            },
+                            validator: emailValidator,
+                            controller: _emailController,
                           ),
                           TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Password',
+                              labelText: 'Senha',
                             ),
                             obscureText: true,
-                            validator: (value) {
-                              if (value == null || value.trim().length < 6) {
-                                return 'Password must be at least 6 characters long';
-                              }
-                              return null;
-                            },
-                            onSaved: (newValue) {
-                              _enteredPassword = newValue!;
-                            },
+                            validator: passwordValidator,
+                            controller: _passwordController,
                           ),
                           const SizedBox(height: 12),
                           if (_isLoadingAuthentication) const CircularProgressIndicator(),
                           if (!_isLoadingAuthentication)
                             ElevatedButton(
-                              onPressed: () => print('Submit!!!'),
+                              onPressed: handleSubmitLoginForm,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                               ),
-                              child: const Text('Login'),
+                              child: const Text('Entrar'),
                             ),
                         ],
                       ),
