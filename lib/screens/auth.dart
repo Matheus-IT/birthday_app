@@ -1,3 +1,4 @@
+import 'package:birthday_app/api_urls.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -40,24 +41,24 @@ class _AuthScreenState extends State<AuthScreen> {
     print('Email ${_emailController.text}');
     print('Password ${_passwordController.text}');
 
-    // final response = await http.post(
-    //   Uri.parse('http://10.0.2.2:8000/api/login/'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, String>{
-    //     'email': _emailController.text,
-    //     'password': _passwordController.text,
-    //   }),
-    // );
+    final response = await http.post(
+      ApiUrls.login,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      }),
+    );
 
-    // if (response.statusCode == 200) {
-    //   // If the server returns a 200 OK response, parse the JSON.
-    //   print(jsonDecode(response.body)['token']);
-    // } else {
-    //   // If the server did not return a 200 OK response, throw an exception.
-    //   print('Failed to login');
-    // }
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      print(jsonDecode(response.body)['token']);
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      print('Failed to login');
+    }
   }
 
   @override
