@@ -9,11 +9,11 @@ class AuthState {
 class AuthStateNotifier extends StateNotifier<AuthState> {
   AuthStateNotifier() : super(AuthState(isAuthenticated: false));
 
-  Future<void> checkAuthStatus() async {
+  Future<void> updateAuthStatus() async {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'auth_token');
     state = AuthState(isAuthenticated: token != null);
   }
 }
 
-final authStateNotifier = StateNotifierProvider<AuthStateNotifier, AuthState>((ref) => AuthStateNotifier());
+final authStateProvider = StateNotifierProvider<AuthStateNotifier, AuthState>((ref) => AuthStateNotifier());

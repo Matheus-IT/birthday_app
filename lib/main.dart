@@ -1,20 +1,24 @@
 import 'package:birthday_app/app_routes.dart';
+import 'package:birthday_app/providers/auth_state_provider.dart';
 import 'package:birthday_app/screens/auth.dart';
 import 'package:birthday_app/screens/members.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   await dotenv.load();
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(authStateProvider.notifier).updateAuthStatus();
+    final authState = ref.watch(authStateProvider);
+
     return MaterialApp(
       title: 'Birthday Reminder',
       theme: ThemeData(
@@ -25,7 +29,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.authenticationScreen: (ctx) => const AuthScreen(),
         AppRoutes.membersScreen: (ctx) => const MembersScreen(),
       },
-      home: const AuthScreen(),
+      home: authState.isAuthenticated ? const MembersScreen() : const AuthScreen(),
     );
   }
 }
