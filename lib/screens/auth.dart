@@ -1,23 +1,24 @@
 import 'package:birthday_app/api_urls.dart';
 import 'package:birthday_app/app_routes.dart';
 import 'package:birthday_app/http_client.dart';
+import 'package:birthday_app/providers/loading_state_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   static const minPasswordLength = 8;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoadingAuthentication = false;
 
   String? emailValidator(String? enteredEmail) {
     if (enteredEmail == null || enteredEmail.trim().isEmpty || !enteredEmail.contains('@')) {
@@ -38,10 +39,9 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
-    print('Email ${_emailController.text}');
-    print('Password ${_passwordController.text}');
-
     try {
+      ref.read(loadingStateProvider.notifier).toggleLoading();
+
       final response = await HttpClient.post(ApiUrls.login, {
         'email': _emailController.text,
         'password': _passwordController.text,
@@ -59,6 +59,8 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       print('error: $e');
+    } finally {
+      ref.read(loadingStateProvider.notifier).toggleLoading();
     }
   }
 
@@ -111,15 +113,18 @@ class _AuthScreenState extends State<AuthScreen> {
                             controller: _passwordController,
                           ),
                           const SizedBox(height: 12),
-                          if (_isLoadingAuthentication) const CircularProgressIndicator(),
-                          if (!_isLoadingAuthentication)
-                            ElevatedButton(
-                              onPressed: handleSubmitLoginForm,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                              ),
-                              child: const Text('Entrar'),
-                            ),
+                          Consumer(builder: (ctx, ref, child) {
+                            final isLoading = ref.watch(loadingStateProvider);
+                            return isLoading
+                                ? const CircularProgressIndicator()
+                                : ElevatedButton(
+                                    onPressed: handleSubmitLoginForm,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                                    ),
+                                    child: const Text('Entrar'),
+                                  );
+                          }),
                         ],
                       ),
                     ),
