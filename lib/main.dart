@@ -1,4 +1,6 @@
+import 'package:birthday_app/app_routes.dart';
 import 'package:birthday_app/screens/auth.dart';
+import 'package:birthday_app/screens/members.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -14,12 +16,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Birthday Reminder',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const AuthScreen(title: 'Birthday Reminder'),
+      routes: {
+        AppRoutes.authenticationScreen: (ctx) => const AuthScreen(),
+        AppRoutes.membersScreen: (ctx) => const MembersScreen(),
+      },
+      home: const AuthScreen(),
     );
   }
 }
