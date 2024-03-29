@@ -1,11 +1,14 @@
 import 'package:birthday_app/api_urls.dart';
 import 'package:birthday_app/app_routes.dart';
+import 'package:birthday_app/components/snackbar.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/providers/loading_state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
+
+import 'package:http/http.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -53,12 +56,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         await storage.write(key: 'auth_token', value: token);
 
         Navigator.of(context).pushNamed(AppRoutes.membersScreen);
-        print('Success!!!');
       } else {
-        print('Failed!');
+        showSnackbar(context, 'Email ou senha inválidos');
       }
+    } on ClientException {
+      showSnackbar(
+        context,
+        'Não foi possível conectar com o servidor. Você está realmente conectado com a internet?',
+        durationSeconds: 6,
+      );
     } catch (e) {
-      print('error: $e');
+      debugPrint('error: $e');
     } finally {
       ref.read(loadingStateProvider.notifier).toggleLoading();
     }
