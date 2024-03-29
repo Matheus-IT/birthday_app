@@ -42,8 +42,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       return;
     }
 
+    final context = _formKey.currentContext!;
+
     try {
-      ref.read(loadingStateProvider.notifier).toggleLoading();
+      ref.read(loadingStateProvider.notifier).setLoading(true);
 
       final response = await HttpClient.post(ApiUrls.login, {
         'email': _emailController.text,
@@ -53,22 +55,24 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       if (response.statusCode == 200) {
         final token = jsonDecode(response.body)['token'];
         const storage = FlutterSecureStorage();
-        await storage.write(key: 'auth_token', value: token);
 
-        Navigator.of(context).pushNamed(AppRoutes.membersScreen);
+        await storage.write(key: 'auth_token', value: token);
+        if (context.mounted) Navigator.of(context).pushNamed(AppRoutes.membersScreen);
       } else {
-        showSnackbar(context, 'Email ou senha inválidos');
+        if (context.mounted) showSnackbar(context, 'Email ou senha inválidos');
       }
     } on ClientException {
-      showSnackbar(
-        context,
-        'Não foi possível conectar com o servidor. Você está realmente conectado com a internet?',
-        durationSeconds: 6,
-      );
+      if (context.mounted) {
+        showSnackbar(
+          context,
+          'Não foi possível conectar com o servidor. Você está realmente conectado com a internet?',
+          durationSeconds: 6,
+        );
+      }
     } catch (e) {
       debugPrint('error: $e');
     } finally {
-      ref.read(loadingStateProvider.notifier).toggleLoading();
+      ref.read(loadingStateProvider.notifier).setLoading(false);
     }
   }
 

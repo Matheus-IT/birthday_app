@@ -6,6 +6,10 @@ class LoadingStateNotifier extends StateNotifier<bool> {
   void toggleLoading() {
     state = !state;
   }
+
+  void setLoading(bool value) {
+    state = value;
+  }
 }
 
 final loadingStateProvider = StateNotifierProvider<LoadingStateNotifier, bool>((ref) => LoadingStateNotifier());
