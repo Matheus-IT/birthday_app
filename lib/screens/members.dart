@@ -7,6 +7,7 @@ import 'package:birthday_app/models/member.dart';
 import 'package:birthday_app/providers/members_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MembersScreen extends ConsumerStatefulWidget {
   const MembersScreen({super.key});
@@ -40,6 +41,11 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     ref.read(membersProvider.notifier).setMembers(members);
   }
 
+  Future handleLogout() async {
+    const storage = FlutterSecureStorage();
+    await storage.delete(key: 'auth_token');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +54,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           'Todos os membros',
           style: TextStyle(color: Colors.white),
         ),
+        actions: [IconButton(color: Colors.black87, onPressed: handleLogout, icon: const Icon(Icons.exit_to_app))],
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Center(
@@ -68,7 +75,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                               : const Icon(Icons.person),
                         ),
                         title: Text(members[index].name),
-                        subtitle: Text('Data de aniversário ${members[index].birthDateReadable}'),
+                        subtitle: Text('Data de nascimento ${members[index].birthDateReadable}'),
                         trailing: IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {

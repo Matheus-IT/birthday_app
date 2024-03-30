@@ -57,7 +57,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         const storage = FlutterSecureStorage();
 
         await storage.write(key: 'auth_token', value: token);
-        if (context.mounted) Navigator.of(context).pushNamed(AppRoutes.membersScreen);
+        if (context.mounted) Navigator.of(context).pushReplacementNamed(AppRoutes.membersScreen);
       } else {
         if (context.mounted) showSnackbar(context, 'Email ou senha inválidos');
       }
