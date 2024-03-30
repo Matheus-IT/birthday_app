@@ -29,8 +29,7 @@ class MyApp extends ConsumerWidget {
         AppRoutes.authenticationScreen: (ctx) => const AuthScreen(),
         AppRoutes.membersScreen: (ctx) => const MembersScreen(),
       },
-      // home: authState.isAuthenticated ? const MembersScreen() : const AuthScreen(),
-      home: const MembersScreen(),
+      home: authState.isAuthenticated ? const MembersScreen() : const AuthScreen(),
     );
   }
 }

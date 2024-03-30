@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:birthday_app/api_urls.dart';
+import 'package:birthday_app/components/snackbar.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/models/member.dart';
 import 'package:birthday_app/providers/members_provider.dart';
@@ -15,13 +16,16 @@ class MembersScreen extends ConsumerStatefulWidget {
 }
 
 class _MembersScreenState extends ConsumerState<MembersScreen> {
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
     fetchMembers();
   }
 
-  void fetchMembers() async {
+  Future fetchMembers() async {
+    _isLoading = true;
+
     final response = await AuthenticatedHttpClient.get(ApiUrls.members);
     final members = List.from(jsonDecode(response.body))
         .map((el) => Member(
@@ -32,24 +36,49 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
             ))
         .toList();
     // initialize members provider
+    _isLoading = false;
     ref.read(membersProvider.notifier).setMembers(members);
   }
 
   @override
   Widget build(BuildContext context) {
-    print('build members screen');
-
-    final members = ref.watch(membersProvider);
-
     return Scaffold(
-      body: Center(
-        child: ListView(
-          children: members
-              .map((m) => ListTile(
-                    title: Text(m.name),
-                  ))
-              .toList(),
+      appBar: AppBar(
+        title: const Text(
+          'Todos os membros',
+          style: TextStyle(color: Colors.white),
         ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+      body: Center(
+        child: Consumer(builder: (ctx, ref, child) {
+          final members = ref.watch(membersProvider);
+
+          return _isLoading
+              ? const CircularProgressIndicator()
+              : ListView.builder(
+                  itemCount: members.length,
+                  itemBuilder: (ctx, index) {
+                    return Card(
+                      child: ListTile(
+                        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                        leading: CircleAvatar(
+                          child: members[index].profilePicturePath.isNotEmpty
+                              ? Image.network(members[index].profilePicturePath)
+                              : const Icon(Icons.person),
+                        ),
+                        title: Text(members[index].name),
+                        subtitle: Text('Data de aniversário ${members[index].birthDateReadable}'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            showSnackbar(ctx, 'Ainda não está pronto...');
+                          },
+                        ),
+                      ),
+                    );
+                  });
+        }),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Member {
   final String name;
   final String profilePicturePath;
@@ -10,6 +12,10 @@ class Member {
     required this.phoneNumber,
     required this.birthDate,
   });
+
+  String get birthDateReadable {
+    return DateFormat('dd/MM/yyyy').format(DateTime.parse(birthDate));
+  }
 
   @override
   String toString() {
