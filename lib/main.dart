@@ -16,8 +16,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(authStateProvider.notifier).updateAuthStatus();
     final authState = ref.watch(authStateProvider);
+    ref.read(authStateProvider.notifier).updateAuthStatus();
 
     return MaterialApp(
       title: 'Birthday Reminder',
@@ -30,7 +30,7 @@ class MyApp extends ConsumerWidget {
         AppRoutes.membersScreen: (ctx) => const MembersScreen(),
       },
       // home: authState.isAuthenticated ? const MembersScreen() : const AuthScreen(),
-      home: const AuthScreen(),
+      home: const MembersScreen(),
     );
   }
 }
