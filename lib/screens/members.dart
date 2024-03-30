@@ -75,7 +75,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                               : const Icon(Icons.person),
                         ),
                         title: Text(members[index].name),
-                        subtitle: Text('Data de nascimento ${members[index].birthDateReadable}'),
+                        subtitle: Text('Data de aniversário ${members[index].birthDateReadable}'),
                         trailing: IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {

@@ -14,7 +14,7 @@ class Member {
   });
 
   String get birthDateReadable {
-    return DateFormat('dd/MM/yyyy').format(DateTime.parse(birthDate));
+    return DateFormat('dd/MM').format(DateTime.parse(birthDate));
   }
 
   @override
