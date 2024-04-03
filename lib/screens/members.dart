@@ -74,6 +74,47 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     await storage.delete(key: 'auth_token');
   }
 
+  Future handleEditMember() async {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Nome',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Número de telefone',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Data de nascimento',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle the form submission
+                    Navigator.pop(context);
+                  },
+                  child: Text('Salvar'),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,9 +147,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                         subtitle: Text('Data de aniversário ${members[index].birthDateReadable}'),
                         trailing: IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            showSnackbar(ctx, 'Ainda não está pronto...');
-                          },
+                          onPressed: handleEditMember,
                         ),
                       ),
                     );
