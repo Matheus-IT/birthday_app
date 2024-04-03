@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:birthday_app/api_urls.dart';
-import 'package:birthday_app/components/snackbar.dart';
 import 'package:birthday_app/components/error_dialog.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/models/member.dart';
@@ -21,7 +18,6 @@ class MembersScreen extends ConsumerStatefulWidget {
 
 class _MembersScreenState extends ConsumerState<MembersScreen> {
   bool _isLoading = false;
-  final _myKey = GlobalKey();
 
   @override
   void initState() {
