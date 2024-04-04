@@ -30,6 +30,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
     try {
       final response = await AuthenticatedHttpClient.get(ApiUrls.members);
+      if (!mounted) return;
 
       final members = List.from(jsonDecode(response.body))
           .map((el) => Member(
@@ -70,7 +71,11 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     await storage.delete(key: 'auth_token');
   }
 
-  Future handleEditMember() async {
+  Future handleEditMember(Member member) async {
+    final nameController = TextEditingController(text: member.name);
+    final phoneNumberController = TextEditingController(text: member.phoneNumber);
+    final birthDateController = TextEditingController(text: member.birthDate);
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -80,29 +85,32 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Nome',
                   ),
+                  controller: nameController,
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Número de telefone',
                   ),
+                  controller: phoneNumberController,
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Data de nascimento',
                   ),
+                  controller: birthDateController,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     // Handle the form submission
                     Navigator.pop(context);
                   },
-                  child: Text('Salvar'),
+                  child: const Text('Salvar'),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -143,7 +151,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                         subtitle: Text('Data de aniversário ${members[index].birthDateReadable}'),
                         trailing: IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed: handleEditMember,
+                          onPressed: () => handleEditMember(members[index]),
                         ),
                       ),
                     );
