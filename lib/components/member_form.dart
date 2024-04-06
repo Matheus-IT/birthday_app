@@ -21,6 +21,7 @@ class _MemberFormState extends State<MemberForm> {
   late TextEditingController nameController;
   late TextEditingController phoneNumberController;
   late TextEditingController birthDateController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -29,6 +30,37 @@ class _MemberFormState extends State<MemberForm> {
     nameController = TextEditingController(text: widget.member.name);
     phoneNumberController = TextEditingController(text: widget.member.phoneNumber);
     birthDateController = TextEditingController(text: dateFormat.format(widget.member.birthDate));
+  }
+
+  String? nameValidator(String? name) {
+    if (name == null || name.trim().isEmpty) {
+      return 'O nome é obrigatório';
+    }
+    return null;
+  }
+
+  String? phoneNumberValidator(String? phoneNumber) {
+    if (phoneNumber == null) return null;
+
+    if (phoneNumber.isNotEmpty && phoneNumber.length < 11) {
+      return 'Números de telefone têm 11 caracteres';
+    }
+
+    if (!isNumeric(phoneNumber)) {
+      return 'Só são permitidos caracteres numéricos';
+    }
+    return null;
+  }
+
+  bool isNumeric(String str) {
+    final numericRegex = RegExp(r'^-?[0-9]+$');
+    return numericRegex.hasMatch(str);
+  }
+
+  bool atLeastOneFieldWasChanged() {
+    return (nameController.text != widget.member.name ||
+        phoneNumberController.text != widget.member.phoneNumber ||
+        birthDateController.text != dateFormat.format(widget.member.birthDate));
   }
 
   @override
@@ -40,53 +72,65 @@ class _MemberFormState extends State<MemberForm> {
         right: 16,
         left: 16,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            decoration: const InputDecoration(
-              labelText: 'Nome',
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Nome',
+              ),
+              controller: nameController,
+              validator: nameValidator,
             ),
-            controller: nameController,
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            decoration: const InputDecoration(
-              labelText: 'Número de telefone',
+            const SizedBox(height: 8),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Número de telefone',
+              ),
+              keyboardType: TextInputType.number,
+              controller: phoneNumberController,
+              validator: phoneNumberValidator,
             ),
-            controller: phoneNumberController,
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            decoration: const InputDecoration(
-              labelText: 'Data de nascimento',
+            const SizedBox(height: 8),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Data de nascimento',
+              ),
+              readOnly: true,
+              controller: birthDateController,
+              onTap: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: dateFormat.parse(birthDateController.text),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                ).then((selectedDate) {
+                  if (selectedDate != null) {
+                    birthDateController.text = dateFormat.format(selectedDate);
+                  }
+                });
+              },
             ),
-            readOnly: true,
-            controller: birthDateController,
-            onTap: () {
-              showDatePicker(
-                context: context,
-                initialDate: dateFormat.parse(birthDateController.text),
-                firstDate: DateTime(1900),
-                lastDate: DateTime.now(),
-              ).then((selectedDate) {
-                if (selectedDate != null) {
-                  birthDateController.text = dateFormat.format(selectedDate);
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate() && atLeastOneFieldWasChanged()) {
+                  widget.onSubmitMemberForm(
+                    nameController.text,
+                    phoneNumberController.text,
+                    birthDateController.text,
+                  );
+                } else {
+                  Navigator.of(context).pop();
                 }
-              });
-            },
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => widget.onSubmitMemberForm(
-              nameController.text,
-              phoneNumberController.text,
-              birthDateController.text,
+              },
+              child: const Text('Salvar'),
             ),
-            child: const Text('Salvar'),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }
