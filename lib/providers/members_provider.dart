@@ -7,6 +7,13 @@ class MembersStateNotifier extends StateNotifier<List<Member>> {
   void setMembers(List<Member> members) {
     state = members;
   }
+
+  void updateMember(Member updatedMember) {
+    final myMembers = state;
+    final index = myMembers.indexWhere((m) => m.id == updatedMember.id);
+    myMembers[index] = updatedMember;
+    state = [...myMembers];
+  }
 }
 
 final membersProvider = StateNotifierProvider<MembersStateNotifier, List<Member>>((ref) => MembersStateNotifier());
