@@ -4,7 +4,7 @@ class Member {
   final String name;
   final String profilePicturePath;
   final String phoneNumber;
-  final String birthDate;
+  final DateTime birthDate;
 
   Member({
     required this.name,
@@ -14,7 +14,7 @@ class Member {
   });
 
   String get birthDateReadable {
-    return DateFormat('dd/MM').format(DateTime.parse(birthDate));
+    return DateFormat('dd/MM').format(birthDate);
   }
 
   @override

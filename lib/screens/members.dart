@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 class MembersScreen extends ConsumerStatefulWidget {
   const MembersScreen({super.key});
@@ -37,7 +38,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                 name: el['name'],
                 profilePicturePath: '',
                 phoneNumber: el['phone_number'],
-                birthDate: el['birth_date'],
+                birthDate: DateTime.parse(el['birth_date']),
               ))
           .toList();
       // initialize members provider
@@ -74,12 +75,18 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   Future handleEditMember(Member member) async {
     final nameController = TextEditingController(text: member.name);
     final phoneNumberController = TextEditingController(text: member.phoneNumber);
-    final birthDateController = TextEditingController(text: member.birthDate);
+    final dateFormat = DateFormat('dd/MM/yyyy');
+    final birthDateController = TextEditingController(text: dateFormat.format(member.birthDate));
+
+    void handleSubmitMemberForm() {
+      // Perform submit
+    }
 
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         builder: (ctx) {
+          print('member form builder');
           return Padding(
             padding: EdgeInsets.only(
               top: 16,
@@ -108,12 +115,25 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Data de nascimento',
                   ),
+                  readOnly: true,
                   controller: birthDateController,
+                  onTap: () {
+                    showDatePicker(
+                      context: context,
+                      initialDate: dateFormat.parse(birthDateController.text),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    ).then((selectedDate) {
+                      if (selectedDate != null) {
+                        birthDateController.text = dateFormat.format(selectedDate);
+                      }
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle the form submission
+                    handleSubmitMemberForm();
                     Navigator.pop(context);
                   },
                   child: const Text('Salvar'),
@@ -127,6 +147,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('members page build');
     return Scaffold(
       appBar: AppBar(
         title: const Text(
