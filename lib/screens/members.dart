@@ -35,6 +35,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
       final members = List.from(jsonDecode(response.body))
           .map((el) => Member(
+                id: el['id'].toString(),
                 name: el['name'],
                 profilePicturePath: '',
                 phoneNumber: el['phone_number'],

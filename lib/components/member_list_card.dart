@@ -1,6 +1,8 @@
 import 'package:birthday_app/components/member_form.dart';
+import 'package:birthday_app/controllers/member_controller.dart';
 import 'package:birthday_app/models/member.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MemberListCard extends StatelessWidget {
   const MemberListCard({
@@ -13,21 +15,28 @@ class MemberListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void handleEditMember(Member member) {
-      print('handleEditMember');
-
       showBottomSheet(
         context: context,
         // isScrollControlled: true,
         builder: (ctx) {
-          print('showModalBottomSheet builder');
           return MemberForm(
-              member: member,
-              onSubmitMemberForm: (name, phone, birthDate) {
-                // "name": "test2",
-                // "profile_picture": null,
-                // "phone_number": "86995453618",
-                // "birth_date": "2001-12-08"
-              });
+            member: member,
+            onSubmitMemberForm: (name, phone, birthDate) async {
+              final m = Member(
+                id: member.id,
+                name: name,
+                profilePicturePath: '',
+                phoneNumber: phone,
+                birthDate: DateFormat('dd/MM/yyyy').parse(birthDate),
+              );
+
+              final success = await MemberController.updateMemberInfo(m);
+
+              if (success) {
+                Navigator.of(context).pop();
+              }
+            },
+          );
         },
       );
     }

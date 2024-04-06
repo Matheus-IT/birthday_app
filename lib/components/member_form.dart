@@ -35,10 +35,9 @@ class _MemberFormState extends State<MemberForm> {
   Widget build(BuildContext context) {
     print('members form build');
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 16,
         right: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom,
         left: 16,
       ),
       child: Column(
@@ -79,14 +78,11 @@ class _MemberFormState extends State<MemberForm> {
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () {
-              widget.onSubmitMemberForm(
-                nameController.text,
-                phoneNumberController.text,
-                birthDateController.text,
-              );
-              Navigator.pop(context);
-            },
+            onPressed: () => widget.onSubmitMemberForm(
+              nameController.text,
+              phoneNumberController.text,
+              birthDateController.text,
+            ),
             child: const Text('Salvar'),
           ),
           const SizedBox(height: 16),
