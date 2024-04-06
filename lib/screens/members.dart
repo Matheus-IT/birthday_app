@@ -78,9 +78,15 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext context) {
-          return Container(
-            padding: const EdgeInsets.all(16),
+        isScrollControlled: true,
+        builder: (ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+              top: 16,
+              right: 16,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom,
+              left: 16,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
