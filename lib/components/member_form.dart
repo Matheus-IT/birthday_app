@@ -20,6 +20,7 @@ class MemberForm extends StatefulWidget {
 
 class _MemberFormState extends State<MemberForm> {
   final dateFormat = DateFormat('dd/MM/yyyy');
+  late String initialDate;
   late TextEditingController nameController;
   late TextEditingController phoneNumberController;
   late TextEditingController birthDateController;
@@ -31,8 +32,10 @@ class _MemberFormState extends State<MemberForm> {
 
     nameController = TextEditingController(text: widget.member != null ? widget.member!.name : '');
     phoneNumberController = TextEditingController(text: widget.member != null ? widget.member!.phoneNumber : '');
+
+    initialDate = dateFormat.format(DateTime(2000, 1, 1));
     birthDateController =
-        TextEditingController(text: widget.member != null ? dateFormat.format(widget.member!.birthDate) : '');
+        TextEditingController(text: widget.member != null ? dateFormat.format(widget.member!.birthDate) : initialDate);
   }
 
   String? nameValidator(String? name) {
@@ -129,7 +132,7 @@ class _MemberFormState extends State<MemberForm> {
                     phoneNumberController.text,
                     birthDateController.text,
                   );
-                } else {
+                } else if (!atLeastOneFieldWasChanged()) {
                   Navigator.of(context).pop();
                 }
               },

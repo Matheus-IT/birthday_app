@@ -14,6 +14,12 @@ class MembersStateNotifier extends StateNotifier<List<Member>> {
     myMembers[index] = updatedMember;
     state = [...myMembers];
   }
+
+  void addMember(Member newMember) {
+    final myMembers = state;
+    myMembers.add(newMember);
+    state = [...myMembers];
+  }
 }
 
 final membersProvider = StateNotifierProvider<MembersStateNotifier, List<Member>>((ref) => MembersStateNotifier());

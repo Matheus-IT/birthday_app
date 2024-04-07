@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:birthday_app/api_urls.dart';
+import 'package:birthday_app/components/create_member_button.dart';
 import 'package:birthday_app/components/error_dialog.dart';
-import 'package:birthday_app/components/member_form.dart';
 import 'package:birthday_app/components/member_list_card.dart';
-import 'package:birthday_app/components/snackbar.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/models/member.dart';
 import 'package:birthday_app/providers/members_provider.dart';
@@ -75,20 +74,6 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     await storage.delete(key: 'auth_token');
   }
 
-  void handleCreateMember() {
-    // showBottomSheet(
-    //   context: context,
-    //   builder: (ctx) {
-    //     return MemberForm(
-    //       onSubmitMemberForm: handleSubmitMemberCreate,
-    //     );
-    //   },
-    // );
-    showSnackbar(context, 'Ainda não está pronto');
-  }
-
-  void handleSubmitMemberCreate(String name, String phoneNumber, String birthDate) {}
-
   @override
   Widget build(BuildContext context) {
     print('members screen build');
@@ -110,10 +95,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: handleCreateMember,
-                      child: const Text('Cadastrar membro'),
-                    ),
+                    const CreateMemberButton(),
                     Expanded(
                       child: ListView.builder(
                         itemCount: members.length,

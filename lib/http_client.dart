@@ -32,6 +32,21 @@ class AuthenticatedHttpClient {
     );
     return response;
   }
+
+  static Future<http.Response> post(Uri url, Map payload) async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'auth_token');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode(payload),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Token $token',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    return response;
+  }
 }
 
 class HttpClient {

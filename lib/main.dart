@@ -21,6 +21,7 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp(
       title: 'Birthday Reminder',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
