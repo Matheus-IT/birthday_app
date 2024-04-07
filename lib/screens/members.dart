@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:birthday_app/api_urls.dart';
 import 'package:birthday_app/components/error_dialog.dart';
+import 'package:birthday_app/components/member_form.dart';
 import 'package:birthday_app/components/member_list_card.dart';
+import 'package:birthday_app/components/snackbar.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/models/member.dart';
 import 'package:birthday_app/providers/members_provider.dart';
@@ -26,7 +28,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     fetchMembers();
   }
 
-  Future fetchMembers() async {
+  Future<void> fetchMembers() async {
     _isLoading = true;
 
     try {
@@ -68,10 +70,24 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     }
   }
 
-  Future handleLogout() async {
+  Future<void> handleLogout() async {
     const storage = FlutterSecureStorage();
     await storage.delete(key: 'auth_token');
   }
+
+  void handleCreateMember() {
+    // showBottomSheet(
+    //   context: context,
+    //   builder: (ctx) {
+    //     return MemberForm(
+    //       onSubmitMemberForm: handleSubmitMemberCreate,
+    //     );
+    //   },
+    // );
+    showSnackbar(context, 'Ainda não está pronto');
+  }
+
+  void handleSubmitMemberCreate(String name, String phoneNumber, String birthDate) {}
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +107,19 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
           return _isLoading
               ? const CircularProgressIndicator()
-              : ListView.builder(
-                  itemCount: members.length,
-                  itemBuilder: (ctx, index) {
-                    return MemberListCard(member: members[index]);
-                  },
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(onPressed: () {}, child: const Text('Cadastrar membro')),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: members.length,
+                        itemBuilder: (ctx, index) {
+                          return MemberListCard(member: members[index]);
+                        },
+                      ),
+                    ),
+                  ],
                 );
         }),
       ),

@@ -5,11 +5,11 @@ import 'package:intl/intl.dart';
 class MemberForm extends StatefulWidget {
   const MemberForm({
     super.key,
-    required this.member,
+    this.member,
     required this.onSubmitMemberForm,
   });
 
-  final Member member;
+  final Member? member;
   final void Function(String name, String phoneNumber, String birthDate) onSubmitMemberForm;
 
   @override
@@ -27,9 +27,10 @@ class _MemberFormState extends State<MemberForm> {
   void initState() {
     super.initState();
 
-    nameController = TextEditingController(text: widget.member.name);
-    phoneNumberController = TextEditingController(text: widget.member.phoneNumber);
-    birthDateController = TextEditingController(text: dateFormat.format(widget.member.birthDate));
+    nameController = TextEditingController(text: widget.member != null ? widget.member!.name : '');
+    phoneNumberController = TextEditingController(text: widget.member != null ? widget.member!.phoneNumber : '');
+    birthDateController =
+        TextEditingController(text: widget.member != null ? dateFormat.format(widget.member!.birthDate) : '');
   }
 
   String? nameValidator(String? name) {
@@ -58,9 +59,12 @@ class _MemberFormState extends State<MemberForm> {
   }
 
   bool atLeastOneFieldWasChanged() {
-    return (nameController.text != widget.member.name ||
-        phoneNumberController.text != widget.member.phoneNumber ||
-        birthDateController.text != dateFormat.format(widget.member.birthDate));
+    // when theres no member provided, it means that we are in create mode
+    if (widget.member == null) return true;
+
+    return (nameController.text != widget.member!.name ||
+        phoneNumberController.text != widget.member!.phoneNumber ||
+        birthDateController.text != dateFormat.format(widget.member!.birthDate));
   }
 
   @override

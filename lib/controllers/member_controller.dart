@@ -18,8 +18,6 @@ class MemberController {
       ref.read(membersProvider.notifier).updateMember(m);
       return true;
     }
-
-    print('Code was not 200');
     return false;
   }
 }

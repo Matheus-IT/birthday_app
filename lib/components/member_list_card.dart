@@ -51,7 +51,6 @@ class MemberListCard extends ConsumerWidget {
     void handleEditMember(Member member) {
       showBottomSheet(
         context: context,
-        // isScrollControlled: true,
         builder: (ctx) {
           return MemberForm(
             member: member,
