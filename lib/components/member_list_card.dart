@@ -53,6 +53,7 @@ class MemberListCard extends ConsumerWidget {
         context: context,
         builder: (ctx) {
           return MemberForm(
+            formTitle: 'Editar membro',
             member: member,
             onSubmitMemberForm: handleSubmitMemberUpdate,
           );

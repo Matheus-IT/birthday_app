@@ -110,7 +110,10 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(onPressed: () {}, child: const Text('Cadastrar membro')),
+                    ElevatedButton(
+                      onPressed: handleCreateMember,
+                      child: const Text('Cadastrar membro'),
+                    ),
                     Expanded(
                       child: ListView.builder(
                         itemCount: members.length,

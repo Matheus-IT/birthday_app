@@ -6,11 +6,13 @@ class MemberForm extends StatefulWidget {
   const MemberForm({
     super.key,
     this.member,
+    required this.formTitle,
     required this.onSubmitMemberForm,
   });
 
   final Member? member;
   final void Function(String name, String phoneNumber, String birthDate) onSubmitMemberForm;
+  final String formTitle;
 
   @override
   State<MemberForm> createState() => _MemberFormState();
@@ -81,6 +83,7 @@ class _MemberFormState extends State<MemberForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text(style: Theme.of(context).textTheme.titleMedium, widget.formTitle),
             TextFormField(
               decoration: const InputDecoration(
                 labelText: 'Nome',
