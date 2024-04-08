@@ -19,6 +19,10 @@ class Member {
     return DateFormat('dd/MM').format(birthDate);
   }
 
+  String get birthDateReadableFull {
+    return DateFormat('dd/MM/yyyy').format(birthDate);
+  }
+
   @override
   String toString() {
     return name;

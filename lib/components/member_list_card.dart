@@ -61,9 +61,46 @@ class MemberListCard extends ConsumerWidget {
       );
     }
 
+    void handleShowExtraInfoDialog() {
+      showDialog(
+        context: context,
+        builder: (ctx) {
+          return SimpleDialog(
+            contentPadding: const EdgeInsets.all(32),
+            title: const Text('Mais informações'),
+            children: [
+              Text('Nome: ${member.name}'),
+              Text('Data de nascimento: ${member.birthDateReadableFull}'),
+              Text('Telefone: ${member.phoneNumber}'),
+              const SizedBox(height: 16),
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Deletar membro'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Fechar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Card(
       child: ListTile(
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+        onTap: handleShowExtraInfoDialog,
         leading: CircleAvatar(
           child: member.profilePicturePath.isNotEmpty
               ? Image.network(member.profilePicturePath)
