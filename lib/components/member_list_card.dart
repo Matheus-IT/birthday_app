@@ -66,7 +66,7 @@ class MemberListCard extends ConsumerWidget {
         context: context,
         builder: (ctx) {
           return SimpleDialog(
-            contentPadding: const EdgeInsets.all(32),
+            contentPadding: const EdgeInsets.only(top: 32, right: 32, left: 32, bottom: 16),
             title: const Text('Mais informações'),
             children: [
               Text('Nome: ${member.name}'),
