@@ -47,6 +47,20 @@ class AuthenticatedHttpClient {
     );
     return response;
   }
+
+  static Future<http.Response> delete(Uri url) async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'auth_token');
+
+    final response = await http.delete(
+      url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Token $token',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    return response;
+  }
 }
 
 class HttpClient {
