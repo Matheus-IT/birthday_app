@@ -20,6 +20,10 @@ class MembersStateNotifier extends StateNotifier<List<Member>> {
     myMembers.add(newMember);
     state = [...myMembers];
   }
+
+  void removeMember(String memberId) {
+    // TODO: implement this method
+  }
 }
 
 final membersProvider = StateNotifierProvider<MembersStateNotifier, List<Member>>((ref) => MembersStateNotifier());

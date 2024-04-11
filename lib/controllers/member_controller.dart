@@ -46,4 +46,14 @@ class MemberController {
     }
     return false;
   }
+
+  static Future<bool> deleteMember(String memberId, WidgetRef ref) async {
+    final response = await AuthenticatedHttpClient.delete(ApiUrls.member(memberId));
+
+    if (response.statusCode == 204) {
+      ref.read(membersProvider.notifier).removeMember(memberId);
+      return true;
+    }
+    return false;
+  }
 }
