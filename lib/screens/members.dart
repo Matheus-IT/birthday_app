@@ -83,10 +83,8 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
         title: 'Sucesso',
         content: 'Membro ${member.name.toUpperCase()} foi removido com sucesso',
       );
-      print('deu certo');
       return;
     }
-    print('deu ruim');
 
     showErrorDialog(context, content: 'Não foi possível excluir o membro ${member.name.toUpperCase()}');
   }
