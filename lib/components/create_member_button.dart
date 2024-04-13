@@ -18,7 +18,8 @@ class CreateMemberButton extends ConsumerStatefulWidget {
 
 class _CreateMemberButtonState extends ConsumerState<CreateMemberButton> {
   void handleCreateMember(BuildContext context) {
-    showBottomSheet(
+    showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (ctx) {
         return MemberForm(

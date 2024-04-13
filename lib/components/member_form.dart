@@ -78,7 +78,6 @@ class _MemberFormState extends State<MemberForm> {
 
   @override
   Widget build(BuildContext context) {
-    print('members form build');
     return Padding(
       padding: EdgeInsets.only(
         top: 16,

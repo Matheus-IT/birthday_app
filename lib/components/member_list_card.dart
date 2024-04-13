@@ -16,8 +16,6 @@ class MemberListCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('members list card build');
-
     void handleShowExtraInfoDialog() {
       showDialog(
         context: context,
