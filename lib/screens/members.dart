@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:birthday_app/api_urls.dart';
 import 'package:birthday_app/components/create_member_button.dart';
 import 'package:birthday_app/components/error_dialog.dart';
+import 'package:birthday_app/components/info_dialog.dart';
 import 'package:birthday_app/components/member_list_card.dart';
+import 'package:birthday_app/controllers/member_controller.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/models/member.dart';
 import 'package:birthday_app/providers/members_provider.dart';
@@ -69,6 +71,23 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     }
   }
 
+  Future<void> handleDeleteMember(Member member) async {
+    final result = await MemberController.deleteMember(member.id, ref);
+
+    if (result) {
+      showInfoDialog(
+        context,
+        title: 'Sucesso',
+        content: 'Membro ${member.name.toUpperCase()} foi removido com sucesso',
+      );
+      print('deu certo');
+      return;
+    }
+    print('deu ruim');
+
+    showErrorDialog(context, content: 'Não foi possível excluir o membro ${member.name.toUpperCase()}');
+  }
+
   Future<void> handleLogout() async {
     const storage = FlutterSecureStorage();
     await storage.delete(key: 'auth_token');
@@ -100,7 +119,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                       child: ListView.builder(
                         itemCount: members.length,
                         itemBuilder: (ctx, index) {
-                          return MemberListCard(member: members[index]);
+                          return MemberListCard(member: members[index], onDeleteMember: handleDeleteMember);
                         },
                       ),
                     ),

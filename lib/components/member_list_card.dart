@@ -1,4 +1,5 @@
 import 'package:birthday_app/components/error_dialog.dart';
+import 'package:birthday_app/components/info_dialog.dart';
 import 'package:birthday_app/components/member_form.dart';
 import 'package:birthday_app/controllers/member_controller.dart';
 import 'package:birthday_app/models/member.dart';
@@ -11,9 +12,11 @@ class MemberListCard extends ConsumerWidget {
   const MemberListCard({
     super.key,
     required this.member,
+    required this.onDeleteMember,
   });
 
   final Member member;
+  final Future<void> Function(Member member) onDeleteMember;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,6 +83,7 @@ class MemberListCard extends ConsumerWidget {
                 ),
                 child: const Text('Deletar membro'),
                 onPressed: () {
+                  onDeleteMember(member);
                   Navigator.of(context).pop();
                 },
               ),
