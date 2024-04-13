@@ -22,7 +22,10 @@ class MembersStateNotifier extends StateNotifier<List<Member>> {
   }
 
   void removeMember(String memberId) {
-    // TODO: implement this method
+    final myMembers = state;
+    final index = myMembers.indexWhere((m) => m.id == memberId);
+    myMembers.removeAt(index);
+    state = [...myMembers];
   }
 }
 
