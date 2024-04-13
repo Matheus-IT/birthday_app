@@ -3,8 +3,10 @@ import 'package:birthday_app/api_urls.dart';
 import 'package:birthday_app/components/create_member_button.dart';
 import 'package:birthday_app/components/error_dialog.dart';
 import 'package:birthday_app/components/info_dialog.dart';
+import 'package:birthday_app/components/member_form.dart';
 import 'package:birthday_app/components/member_list_card.dart';
 import 'package:birthday_app/controllers/member_controller.dart';
+import 'package:birthday_app/dtos/member_dto.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/models/member.dart';
 import 'package:birthday_app/providers/members_provider.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 class MembersScreen extends ConsumerStatefulWidget {
   const MembersScreen({super.key});
@@ -93,6 +96,57 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     await storage.delete(key: 'auth_token');
   }
 
+  void handleEditMember(Member member) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (ctx) {
+        return MemberForm(
+          formTitle: 'Editar membro',
+          member: member,
+          onSubmitMemberForm: (name, phone, birthDate) => handleSubmitMemberUpdate(
+            MemberDTO(
+              id: member.id,
+              name: name,
+              profilePicturePath: '',
+              phoneNumber: phone,
+              birthDate: DateFormat('dd/MM/yyyy').parse(birthDate),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> handleSubmitMemberUpdate(MemberDTO memberDTO) async {
+    final m = Member(
+      id: memberDTO.id!,
+      name: memberDTO.name,
+      profilePicturePath: '',
+      phoneNumber: memberDTO.phoneNumber,
+      birthDate: memberDTO.birthDate,
+    );
+
+    try {
+      final success = await MemberController.updateMemberInfo(m, ref);
+      if (success) {
+        Navigator.of(context).pop();
+      }
+    } on ClientException catch (e) {
+      if (e.message.contains('Connection refused')) {
+        showErrorDialog(
+          context,
+          content: 'Não foi possível atualizar membro. Talvez houve um problema com o servidor.',
+        );
+      } else {
+        showErrorDialog(
+          context,
+          content: 'Não foi possível atualizar membro.',
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print('members screen build');
@@ -126,7 +180,11 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                           : ListView.builder(
                               itemCount: members.length,
                               itemBuilder: (ctx, index) {
-                                return MemberListCard(member: members[index], onDeleteMember: handleDeleteMember);
+                                return MemberListCard(
+                                  member: members[index],
+                                  onDeleteMember: handleDeleteMember,
+                                  onEditMember: handleEditMember,
+                                );
                               },
                             ),
                     ),

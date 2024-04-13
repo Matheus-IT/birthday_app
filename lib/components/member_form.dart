@@ -80,10 +80,11 @@ class _MemberFormState extends State<MemberForm> {
   Widget build(BuildContext context) {
     print('members form build');
     return Padding(
-      padding: const EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: 16,
         right: 16,
         left: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Form(
         key: _formKey,

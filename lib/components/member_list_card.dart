@@ -13,56 +13,16 @@ class MemberListCard extends ConsumerWidget {
     super.key,
     required this.member,
     required this.onDeleteMember,
+    required this.onEditMember,
   });
 
   final Member member;
   final Future<void> Function(Member member) onDeleteMember;
+  final void Function(Member member) onEditMember;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     print('members list card build');
-
-    void handleSubmitMemberUpdate(String name, String phone, String birthDate) async {
-      final m = Member(
-        id: member.id,
-        name: name,
-        profilePicturePath: '',
-        phoneNumber: phone,
-        birthDate: DateFormat('dd/MM/yyyy').parse(birthDate),
-      );
-
-      try {
-        final success = await MemberController.updateMemberInfo(m, ref);
-        if (success) {
-          Navigator.of(context).pop();
-        }
-      } on ClientException catch (e) {
-        if (e.message.contains('Connection refused')) {
-          showErrorDialog(
-            context,
-            content: 'Não foi possível atualizar membro. Talvez houve um problema com o servidor.',
-          );
-        } else {
-          showErrorDialog(
-            context,
-            content: 'Não foi possível atualizar membro.',
-          );
-        }
-      }
-    }
-
-    void handleEditMember(Member member) {
-      showBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return MemberForm(
-            formTitle: 'Editar membro',
-            member: member,
-            onSubmitMemberForm: handleSubmitMemberUpdate,
-          );
-        },
-      );
-    }
 
     void handleShowExtraInfoDialog() {
       showDialog(
@@ -115,7 +75,7 @@ class MemberListCard extends ConsumerWidget {
         trailing: IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
-            handleEditMember(member);
+            onEditMember(member);
           },
         ),
       ),
