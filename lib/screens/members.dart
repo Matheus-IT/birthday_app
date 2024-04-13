@@ -116,12 +116,19 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                   children: [
                     const CreateMemberButton(),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: members.length,
-                        itemBuilder: (ctx, index) {
-                          return MemberListCard(member: members[index], onDeleteMember: handleDeleteMember);
-                        },
-                      ),
+                      child: members.isEmpty
+                          ? const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(32),
+                                child: Text('Nenhum membro cadastrado, clique no botão acima para incluir um membro'),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: members.length,
+                              itemBuilder: (ctx, index) {
+                                return MemberListCard(member: members[index], onDeleteMember: handleDeleteMember);
+                              },
+                            ),
                     ),
                   ],
                 );
