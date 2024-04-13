@@ -9,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class MemberController {
-  static Future<bool> updateMemberInfo(Member m, WidgetRef ref) async {
-    final response = await AuthenticatedHttpClient.put(ApiUrls.member(m.id), {
+  static Future<bool> updateMemberInfo(MemberDTO m, WidgetRef ref) async {
+    final response = await AuthenticatedHttpClient.put(ApiUrls.member(m.id!), {
       'name': m.name,
       'profile_picture': null,
       'phone_number': m.phoneNumber,
@@ -18,7 +18,15 @@ class MemberController {
     });
 
     if (response.statusCode == 200) {
-      ref.read(membersProvider.notifier).updateMember(m);
+      final responseData = jsonDecode(response.body);
+      final updatedMember = Member(
+        id: responseData['id'].toString(),
+        name: responseData['name'],
+        birthDate: DateTime.parse(responseData['birth_date']),
+        phoneNumber: responseData['phone_number'],
+        profilePicturePath: '',
+      );
+      ref.read(membersProvider.notifier).updateMember(updatedMember);
       return true;
     }
     return false;

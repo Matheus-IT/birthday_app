@@ -117,16 +117,8 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   }
 
   Future<void> handleSubmitMemberUpdate(MemberDTO memberDTO) async {
-    final m = Member(
-      id: memberDTO.id!,
-      name: memberDTO.name,
-      profilePicturePath: '',
-      phoneNumber: memberDTO.phoneNumber,
-      birthDate: memberDTO.birthDate,
-    );
-
     try {
-      final success = await MemberController.updateMemberInfo(m, ref);
+      final success = await MemberController.updateMemberInfo(memberDTO, ref);
       if (success) {
         Navigator.of(context).pop();
       }
