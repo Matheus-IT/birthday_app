@@ -10,6 +10,7 @@ import 'package:birthday_app/dtos/member_dto.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/models/member.dart';
 import 'package:birthday_app/providers/members_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -29,7 +30,16 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   @override
   void initState() {
     super.initState();
+    setupPushNotifications();
     fetchMembers();
+  }
+
+  Future<void> setupPushNotifications() async {
+    final fcm = FirebaseMessaging.instance;
+
+    await fcm.requestPermission();
+
+    fcm.subscribeToTopic('birthdays-of-the-day');
   }
 
   Future<void> fetchMembers() async {
