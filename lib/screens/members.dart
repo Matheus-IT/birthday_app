@@ -149,7 +149,6 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('members screen build');
     return Scaffold(
       appBar: AppBar(
         title: const Text(
