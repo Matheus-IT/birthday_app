@@ -16,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:birthday_app/providers/auth_state_provider.dart';
 
 class MembersScreen extends ConsumerStatefulWidget {
   const MembersScreen({super.key});
@@ -102,6 +103,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
   Future<void> handleLogout() async {
     const storage = FlutterSecureStorage();
     await storage.delete(key: 'auth_token');
+    ref.read(authStateProvider.notifier).updateAuthStatus();
   }
 
   void handleEditMember(Member member) {
