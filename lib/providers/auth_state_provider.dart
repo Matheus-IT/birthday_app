@@ -1,19 +1,31 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+@immutable
 class AuthState {
   final bool isAuthenticated;
-  AuthState({required this.isAuthenticated});
+  const AuthState({required this.isAuthenticated});
 }
 
-class AuthStateNotifier extends StateNotifier<AuthState> {
-  AuthStateNotifier() : super(AuthState(isAuthenticated: false));
-
-  Future<void> updateAuthStatus() async {
+class AuthStateNotifier extends AsyncNotifier<AuthState> {
+  Future<AuthState> _fetchAuthState() async {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'auth_token');
-    state = AuthState(isAuthenticated: token != null);
+    return AuthState(isAuthenticated: token != null);
+  }
+
+  @override
+  Future<AuthState> build() async {
+    return await _fetchAuthState();
+  }
+
+  Future<void> updateAuthStatus() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return await _fetchAuthState();
+    });
   }
 }
 
-final authStateProvider = StateNotifierProvider<AuthStateNotifier, AuthState>((ref) => AuthStateNotifier());
+final authStateProvider = AsyncNotifierProvider<AuthStateNotifier, AuthState>(() => AuthStateNotifier());
