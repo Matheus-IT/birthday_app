@@ -82,6 +82,11 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           action: fetchMembers,
         );
       }
+    } catch (e) {
+      showErrorDialog(
+        context,
+        content: e.toString(),
+      );
     }
   }
 
