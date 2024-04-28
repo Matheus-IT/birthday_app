@@ -21,7 +21,7 @@ class AuthStateNotifier extends AsyncNotifier<AuthState> {
   }
 
   Future<void> updateAuthStatus() async {
-    state = const AsyncValue.loading();
+    state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       return await _fetchAuthState();
     });

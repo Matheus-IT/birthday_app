@@ -2,6 +2,7 @@ import 'package:birthday_app/api_urls.dart';
 import 'package:birthday_app/app_routes.dart';
 import 'package:birthday_app/components/snackbar.dart';
 import 'package:birthday_app/http_client.dart';
+import 'package:birthday_app/providers/auth_state_provider.dart';
 import 'package:birthday_app/providers/loading_state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,7 +58,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         const storage = FlutterSecureStorage();
 
         await storage.write(key: 'auth_token', value: token);
-        if (context.mounted) Navigator.of(context).pushReplacementNamed(AppRoutes.membersScreen);
+        ref.read(authStateProvider.notifier).updateAuthStatus();
       } else {
         if (context.mounted) showSnackbar(context, 'Email ou senha inválidos');
       }
