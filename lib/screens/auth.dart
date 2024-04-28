@@ -1,5 +1,4 @@
 import 'package:birthday_app/api_urls.dart';
-import 'package:birthday_app/app_routes.dart';
 import 'package:birthday_app/components/snackbar.dart';
 import 'package:birthday_app/http_client.dart';
 import 'package:birthday_app/providers/auth_state_provider.dart';
