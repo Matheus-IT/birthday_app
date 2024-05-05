@@ -33,7 +33,7 @@ class _MemberFormState extends State<MemberForm> {
     nameController = TextEditingController(text: widget.member != null ? widget.member!.name : '');
     phoneNumberController = TextEditingController(text: widget.member != null ? widget.member!.phoneNumber : '');
 
-    initialDate = dateFormat.format(DateTime(2000, 1, 1));
+    initialDate = dateFormat.format(DateTime(2000, 2, 1));
     birthDateController =
         TextEditingController(text: widget.member != null ? dateFormat.format(widget.member!.birthDate) : initialDate);
   }
@@ -46,7 +46,7 @@ class _MemberFormState extends State<MemberForm> {
   }
 
   String? phoneNumberValidator(String? phoneNumber) {
-    if (phoneNumber == null) return null;
+    if (phoneNumber == null || phoneNumber.isEmpty) return null;
 
     if (phoneNumber.isNotEmpty && phoneNumber.length < 11) {
       return 'Números de telefone têm 11 caracteres';
@@ -130,6 +130,7 @@ class _MemberFormState extends State<MemberForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
+                print('date controller >>${birthDateController.text}');
                 if (_formKey.currentState!.validate() && atLeastOneFieldWasChanged()) {
                   widget.onSubmitMemberForm(
                     nameController.text,

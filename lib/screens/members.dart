@@ -55,7 +55,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                 id: el['id'].toString(),
                 name: el['name'],
                 profilePicturePath: '',
-                phoneNumber: el['phone_number'],
+                phoneNumber: el['phone_number'] ?? '',
                 birthDate: DateTime.parse(el['birth_date']),
               ))
           .toList();

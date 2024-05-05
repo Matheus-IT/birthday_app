@@ -23,7 +23,7 @@ class MemberController {
         id: responseData['id'].toString(),
         name: responseData['name'],
         birthDate: DateTime.parse(responseData['birth_date']),
-        phoneNumber: responseData['phone_number'],
+        phoneNumber: responseData['phone_number'] ?? '',
         profilePicturePath: '',
       );
       ref.read(membersProvider.notifier).updateMember(updatedMember);
@@ -33,10 +33,11 @@ class MemberController {
   }
 
   static Future<bool> createMember(MemberDTO m, WidgetRef ref) async {
+    print('>>>${DateFormat('yyyy-MM-dd').format(m.birthDate)}');
     final response = await AuthenticatedHttpClient.post(ApiUrls.members, {
       'name': m.name,
       'profile_picture': null,
-      'phone_number': m.phoneNumber,
+      'phone_number': m.phoneNumber.isNotEmpty ? m.phoneNumber : null,
       'birth_date': DateFormat('yyyy-MM-dd').format(m.birthDate),
     });
 
@@ -46,7 +47,7 @@ class MemberController {
         id: responseData['id'].toString(),
         name: responseData['name'],
         profilePicturePath: '',
-        phoneNumber: responseData['phone_number'],
+        phoneNumber: responseData['phone_number'] ?? '',
         birthDate: DateTime.parse(responseData['birth_date']),
       );
       ref.read(membersProvider.notifier).addMember(member);
