@@ -33,6 +33,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
     super.initState();
     setupPushNotifications();
     fetchMembers();
+    fetchBirthdayMembers();
   }
 
   Future<void> setupPushNotifications() async {
@@ -79,6 +80,50 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
         showErrorDialog(
           context,
           content: 'Não foi possível trazer a lista de membros.',
+          action: fetchMembers,
+        );
+      }
+    } catch (e) {
+      showErrorDialog(
+        context,
+        content: e.toString(),
+      );
+    }
+  }
+
+  Future<void> fetchBirthdayMembers() async {
+    try {
+      final response = await AuthenticatedHttpClient.get(ApiUrls.birthdayMembers);
+      if (!mounted) return;
+
+      final members = List.from(jsonDecode(response.body)['birthday_members'])
+          .map((el) => MemberDTO(
+                id: el['id'].toString(),
+                name: el['name'],
+                profilePicturePath: '',
+                phoneNumber: el['phone_number'] ?? '',
+                birthDate: DateTime.parse(el['birth_date']),
+              ))
+          .toList();
+      print('>>>$members');
+    } on ClientException catch (e) {
+      if (e.message.contains('Connection refused')) {
+        showErrorDialog(
+          context,
+          content: 'Não foi possível trazer os aniversariantes do dia. Talvez houve um problema com o servidor.',
+          action: fetchMembers,
+        );
+      } else if (e.message.contains('Connection failed')) {
+        showErrorDialog(
+          context,
+          content:
+              'Não foi possível trazer os aniversariantes do dia. Você tem certeza de que está conectado à internet?',
+          action: fetchMembers,
+        );
+      } else {
+        showErrorDialog(
+          context,
+          content: 'Não foi possível trazer os aniversariantes do dia.',
           action: fetchMembers,
         );
       }

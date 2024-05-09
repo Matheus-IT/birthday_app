@@ -33,7 +33,6 @@ class MemberController {
   }
 
   static Future<bool> createMember(MemberDTO m, WidgetRef ref) async {
-    print('>>>${DateFormat('yyyy-MM-dd').format(m.birthDate)}');
     final response = await AuthenticatedHttpClient.post(ApiUrls.members, {
       'name': m.name,
       'profile_picture': null,

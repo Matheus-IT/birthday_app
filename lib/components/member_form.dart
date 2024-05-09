@@ -130,7 +130,6 @@ class _MemberFormState extends State<MemberForm> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                print('date controller >>${birthDateController.text}');
                 if (_formKey.currentState!.validate() && atLeastOneFieldWasChanged()) {
                   widget.onSubmitMemberForm(
                     nameController.text,
