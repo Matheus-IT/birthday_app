@@ -69,7 +69,7 @@ class MemberListCard extends ConsumerWidget {
               : Icon(_isMemberBirthday(member) ? Icons.cake : Icons.person),
         ),
         title: Text(member.name),
-        subtitle: Text('Data de aniversário ${member.birthDateReadable}'),
+        subtitle: Text(_isMemberBirthday(member) ? 'É hoje!' : 'Data de aniversário ${member.birthDateReadable}'),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
