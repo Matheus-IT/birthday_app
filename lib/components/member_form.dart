@@ -52,7 +52,7 @@ class _MemberFormState extends State<MemberForm> {
       return 'Números de telefone têm 11 caracteres';
     }
 
-    if (phoneNumber.length > 12) {
+    if (phoneNumber.length > 11) {
       return 'Números de telefone não podem ter mais de 11 caracteres';
     }
 
