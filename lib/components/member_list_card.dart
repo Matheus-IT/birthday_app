@@ -24,7 +24,7 @@ class MemberListCard extends ConsumerWidget {
           children: [
             Text('Nome: ${member.name}'),
             Text('Data de nascimento: ${member.birthDateReadableFull}'),
-            Text('Telefone: ${member.phoneNumber}'),
+            Text('Telefone: ${member.phoneNumberFormatted}'),
             const SizedBox(height: 16),
             TextButton(
               style: TextButton.styleFrom(

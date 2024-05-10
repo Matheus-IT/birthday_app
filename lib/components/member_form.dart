@@ -1,6 +1,7 @@
 import 'package:birthday_app/models/member.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class MemberForm extends StatefulWidget {
   const MemberForm({
@@ -25,13 +26,19 @@ class _MemberFormState extends State<MemberForm> {
   late TextEditingController phoneNumberController;
   late TextEditingController birthDateController;
   final _formKey = GlobalKey<FormState>();
+  final phoneFormatter = MaskTextInputFormatter(
+    mask: '(##) #####-####', // Mask for mobile numbers
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
 
   @override
   void initState() {
     super.initState();
 
     nameController = TextEditingController(text: widget.member != null ? widget.member!.name : '');
-    phoneNumberController = TextEditingController(text: widget.member != null ? widget.member!.phoneNumber : '');
+    phoneNumberController =
+        TextEditingController(text: widget.member != null ? widget.member!.phoneNumberFormatted : '');
 
     initialDate = dateFormat.format(DateTime(2000, 2, 1));
     birthDateController =
@@ -47,6 +54,7 @@ class _MemberFormState extends State<MemberForm> {
 
   String? phoneNumberValidator(String? phoneNumber) {
     if (phoneNumber == null || phoneNumber.isEmpty) return null;
+    phoneNumber = _removeNonNumeric(phoneNumber);
 
     if (phoneNumber.isNotEmpty && phoneNumber.length < 11) {
       return 'Números de telefone têm 11 caracteres';
@@ -60,6 +68,11 @@ class _MemberFormState extends State<MemberForm> {
       return 'Só são permitidos caracteres numéricos';
     }
     return null;
+  }
+
+  String _removeNonNumeric(String formattedNumber) {
+    // Removes non numeric characters used for formatting (like parentheses, spaces, and dashes)
+    return formattedNumber.replaceAll(RegExp(r'\D'), '');
   }
 
   bool isNumeric(String str) {
@@ -106,6 +119,7 @@ class _MemberFormState extends State<MemberForm> {
               keyboardType: TextInputType.number,
               controller: phoneNumberController,
               validator: phoneNumberValidator,
+              inputFormatters: [phoneFormatter],
             ),
             const SizedBox(height: 8),
             TextFormField(
