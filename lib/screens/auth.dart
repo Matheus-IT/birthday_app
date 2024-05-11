@@ -70,7 +70,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         );
       }
     } catch (e) {
-      debugPrint('error: $e');
+      if (context.mounted) {
+        showSnackbar(
+          context,
+          'error: $e',
+          durationSeconds: 6,
+        );
+      }
     } finally {
       ref.read(loadingStateProvider.notifier).setLoading(false);
     }

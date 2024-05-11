@@ -119,15 +119,17 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
         return MemberForm(
           formTitle: 'Editar membro',
           member: member,
-          onSubmitMemberForm: (name, phone, birthDate) => handleSubmitMemberUpdate(
-            MemberDTO(
-              id: member.id,
-              name: name,
-              profilePicturePath: '',
-              phoneNumber: phone,
-              birthDate: DateFormat('dd/MM/yyyy').parse(birthDate),
-            ),
-          ),
+          onSubmitMemberForm: (name, phone, birthDate) {
+            handleSubmitMemberUpdate(
+              MemberDTO(
+                id: member.id,
+                name: name,
+                profilePicturePath: '',
+                phoneNumber: phone,
+                birthDate: DateFormat('dd/MM/yyyy').parse(birthDate),
+              ),
+            );
+          },
         );
       },
     );
@@ -151,6 +153,8 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           content: 'Não foi possível atualizar membro.',
         );
       }
+    } catch (e) {
+      showErrorDialog(context, content: e.toString());
     }
   }
 

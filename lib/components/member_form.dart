@@ -147,7 +147,7 @@ class _MemberFormState extends State<MemberForm> {
                 if (_formKey.currentState!.validate() && atLeastOneFieldWasChanged()) {
                   widget.onSubmitMemberForm(
                     nameController.text,
-                    phoneNumberController.text,
+                    _removeNonNumeric(phoneNumberController.text),
                     birthDateController.text,
                   );
                 } else if (!atLeastOneFieldWasChanged()) {

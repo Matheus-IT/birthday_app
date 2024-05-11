@@ -40,6 +40,7 @@ class _CreateMemberButtonState extends ConsumerState<CreateMemberButton> {
 
     try {
       final success = await MemberController.createMember(m, ref);
+
       if (!mounted) return;
 
       if (success) {
@@ -57,6 +58,8 @@ class _CreateMemberButtonState extends ConsumerState<CreateMemberButton> {
           content: 'Não foi possível criar o membro.',
         );
       }
+    } catch (e) {
+      showErrorDialog(context, content: e.toString());
     }
   }
 

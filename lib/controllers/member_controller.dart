@@ -29,7 +29,7 @@ class MemberController {
       ref.read(membersProvider.notifier).updateMember(updatedMember);
       return true;
     }
-    return false;
+    throw Exception('Error when updating member info, response status code ${response.statusCode}');
   }
 
   static Future<bool> createMember(MemberDTO m, WidgetRef ref) async {
@@ -52,7 +52,7 @@ class MemberController {
       ref.read(membersProvider.notifier).addMember(member);
       return true;
     }
-    return false;
+    throw Exception('Error when creating member, response status code ${response.statusCode}');
   }
 
   static Future<bool> deleteMember(String memberId, WidgetRef ref) async {

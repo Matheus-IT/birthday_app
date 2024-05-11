@@ -28,7 +28,7 @@ class Member {
     // You can adjust this format according to your requirements
     if (phoneNumber.isEmpty) return '';
     String areaCode = phoneNumber.substring(0, 2); // Assuming the country code is the first two digits
-    String localNumber1 = phoneNumber.substring(2, 6); // Assuming the local number is the rest of the digits
+    String localNumber1 = phoneNumber.substring(2, 7); // Assuming the local number is the rest of the digits
     String localNumber2 = phoneNumber.substring(7); // Assuming the local number is the rest of the digits
 
     return '($areaCode) $localNumber1-$localNumber2';
