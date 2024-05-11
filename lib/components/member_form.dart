@@ -128,6 +128,7 @@ class _MemberFormState extends ConsumerState<MemberForm> {
               ),
               controller: nameController,
               validator: nameValidator,
+              maxLength: 50,
             ),
             const SizedBox(height: 8),
             TextFormField(
@@ -138,6 +139,7 @@ class _MemberFormState extends ConsumerState<MemberForm> {
               controller: phoneNumberController,
               validator: phoneNumberValidator,
               inputFormatters: [phoneFormatter],
+              maxLength: 15, // considering format character like "(" and "-"
             ),
             const SizedBox(height: 8),
             TextFormField(
@@ -146,6 +148,7 @@ class _MemberFormState extends ConsumerState<MemberForm> {
               ),
               readOnly: true,
               controller: birthDateController,
+              maxLength: 10,
               onTap: () {
                 showDatePicker(
                   context: context,
