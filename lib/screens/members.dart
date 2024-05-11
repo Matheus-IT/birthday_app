@@ -119,8 +119,8 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
         return MemberForm(
           formTitle: 'Editar membro',
           member: member,
-          onSubmitMemberForm: (name, phone, birthDate) {
-            handleSubmitMemberUpdate(
+          onSubmitMemberForm: (name, phone, birthDate) async {
+            await handleSubmitMemberUpdate(
               MemberDTO(
                 id: member.id,
                 name: name,

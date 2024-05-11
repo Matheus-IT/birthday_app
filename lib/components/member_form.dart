@@ -1,9 +1,11 @@
 import 'package:birthday_app/models/member.dart';
+import 'package:birthday_app/providers/loading_state_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class MemberForm extends StatefulWidget {
+class MemberForm extends ConsumerStatefulWidget {
   const MemberForm({
     super.key,
     this.member,
@@ -12,14 +14,14 @@ class MemberForm extends StatefulWidget {
   });
 
   final Member? member;
-  final void Function(String name, String phoneNumber, String birthDate) onSubmitMemberForm;
+  final Future<void> Function(String name, String phoneNumber, String birthDate) onSubmitMemberForm;
   final String formTitle;
 
   @override
-  State<MemberForm> createState() => _MemberFormState();
+  ConsumerState<MemberForm> createState() => _MemberFormState();
 }
 
-class _MemberFormState extends State<MemberForm> {
+class _MemberFormState extends ConsumerState<MemberForm> {
   final dateFormat = DateFormat('dd/MM/yyyy');
   late String initialDate;
   late TextEditingController nameController;
@@ -85,8 +87,24 @@ class _MemberFormState extends State<MemberForm> {
     if (widget.member == null) return true;
 
     return (nameController.text != widget.member!.name ||
-        phoneNumberController.text != widget.member!.phoneNumber ||
+        _removeNonNumeric(phoneNumberController.text) != widget.member!.phoneNumber ||
         birthDateController.text != dateFormat.format(widget.member!.birthDate));
+  }
+
+  Future<void> handleClickSave() async {
+    if (_formKey.currentState!.validate() && atLeastOneFieldWasChanged()) {
+      ref.read(loadingStateProvider.notifier).setLoading(true);
+
+      await widget.onSubmitMemberForm(
+        nameController.text,
+        _removeNonNumeric(phoneNumberController.text),
+        birthDateController.text,
+      );
+
+      ref.read(loadingStateProvider.notifier).setLoading(false);
+    } else if (!atLeastOneFieldWasChanged()) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -142,20 +160,15 @@ class _MemberFormState extends State<MemberForm> {
               },
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate() && atLeastOneFieldWasChanged()) {
-                  widget.onSubmitMemberForm(
-                    nameController.text,
-                    _removeNonNumeric(phoneNumberController.text),
-                    birthDateController.text,
-                  );
-                } else if (!atLeastOneFieldWasChanged()) {
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Salvar'),
-            ),
+            Consumer(builder: (ctx, ref, child) {
+              final isLoading = ref.watch(loadingStateProvider);
+              return isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: handleClickSave,
+                      child: const Text('Salvar'),
+                    );
+            }),
             const SizedBox(height: 16),
           ],
         ),

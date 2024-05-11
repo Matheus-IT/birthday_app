@@ -30,7 +30,7 @@ class _CreateMemberButtonState extends ConsumerState<CreateMemberButton> {
     );
   }
 
-  void handleSubmitMemberCreate(String name, String phoneNumber, String birthDate) async {
+  Future<void> handleSubmitMemberCreate(String name, String phoneNumber, String birthDate) async {
     final m = MemberDTO(
       name: name,
       profilePicturePath: '',
