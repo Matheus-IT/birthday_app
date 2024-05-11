@@ -57,6 +57,13 @@ class MemberListCard extends ConsumerWidget {
     return member.birthDate.day == now.day && member.birthDate.month == now.month;
   }
 
+  String _formatMemberName(String memberName) {
+    if (memberName.length > 19) {
+      return '${memberName.substring(0, 19)}...';
+    }
+    return memberName;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
@@ -68,7 +75,7 @@ class MemberListCard extends ConsumerWidget {
               ? Image.network(member.profilePicturePath)
               : Icon(_isMemberBirthday(member) ? Icons.cake : Icons.person),
         ),
-        title: Text(member.name),
+        title: Text(_formatMemberName(member.name)),
         subtitle: Text(_isMemberBirthday(member) ? 'É hoje!' : 'Data de aniversário ${member.birthDateReadable}'),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
