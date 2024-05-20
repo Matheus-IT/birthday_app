@@ -49,3 +49,5 @@ web/
 windows/
 
 .env
+
+./firebase.json
