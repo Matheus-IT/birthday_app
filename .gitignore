@@ -50,4 +50,4 @@ windows/
 
 .env
 
-./firebase.json
+firebase.json
