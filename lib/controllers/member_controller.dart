@@ -18,7 +18,7 @@ class MemberController {
     });
 
     if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
+      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
       final updatedMember = Member(
         id: responseData['id'].toString(),
         name: responseData['name'],
@@ -41,7 +41,7 @@ class MemberController {
     });
 
     if (response.statusCode == 201) {
-      final responseData = jsonDecode(response.body);
+      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
       final member = Member(
         id: responseData['id'].toString(),
         name: responseData['name'],

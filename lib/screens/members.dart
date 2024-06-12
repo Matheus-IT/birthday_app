@@ -50,7 +50,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       final response = await AuthenticatedHttpClient.get(ApiUrls.members);
       if (!mounted) return;
 
-      final members = List.from(jsonDecode(response.body))
+      final members = List.from(jsonDecode(utf8.decode(response.bodyBytes)))
           .map((el) => Member(
                 id: el['id'].toString(),
                 name: el['name'],

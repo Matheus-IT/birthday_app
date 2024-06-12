@@ -12,7 +12,7 @@ class AuthenticatedHttpClient {
       url,
       headers: {
         HttpHeaders.authorizationHeader: 'Token $token',
-        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       },
     );
     return response;
@@ -27,7 +27,7 @@ class AuthenticatedHttpClient {
       body: jsonEncode(payload),
       headers: {
         HttpHeaders.authorizationHeader: 'Token $token',
-        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       },
     );
     return response;
@@ -37,12 +37,14 @@ class AuthenticatedHttpClient {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'auth_token');
 
+    print('payload $payload');
+
     final response = await http.post(
       url,
       body: jsonEncode(payload),
       headers: {
         HttpHeaders.authorizationHeader: 'Token $token',
-        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       },
     );
     return response;
@@ -56,7 +58,7 @@ class AuthenticatedHttpClient {
       url,
       headers: {
         HttpHeaders.authorizationHeader: 'Token $token',
-        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       },
     );
     return response;
