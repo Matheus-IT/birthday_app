@@ -41,8 +41,6 @@ class MyAuthenticatedHttpClient {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'auth_token');
 
-    print('payload $payload');
-
     final response = await _httpClient.post(
       url,
       body: jsonEncode(payload),
