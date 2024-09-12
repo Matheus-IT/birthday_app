@@ -10,7 +10,8 @@ import 'package:intl/intl.dart';
 
 class MemberController {
   static Future<bool> updateMemberInfo(MemberDTO m, WidgetRef ref) async {
-    final response = await AuthenticatedHttpClient.put(ApiUrls.member(m.id!), {
+    final response =
+        await MyAuthenticatedHttpClient.put(ApiUrls.member(m.id!), {
       'name': m.name,
       'profile_picture': null,
       'phone_number': m.phoneNumber,
@@ -29,11 +30,12 @@ class MemberController {
       ref.read(membersProvider.notifier).updateMember(updatedMember);
       return true;
     }
-    throw Exception('Error when updating member info, response status code ${response.statusCode}');
+    throw Exception(
+        'Error when updating member info, response status code ${response.statusCode}');
   }
 
   static Future<bool> createMember(MemberDTO m, WidgetRef ref) async {
-    final response = await AuthenticatedHttpClient.post(ApiUrls.members, {
+    final response = await MyAuthenticatedHttpClient.post(ApiUrls.members, {
       'name': m.name,
       'profile_picture': null,
       'phone_number': m.phoneNumber.isNotEmpty ? m.phoneNumber : null,
@@ -52,11 +54,13 @@ class MemberController {
       ref.read(membersProvider.notifier).addMember(member);
       return true;
     }
-    throw Exception('Error when creating member, response status code ${response.statusCode}');
+    throw Exception(
+        'Error when creating member, response status code ${response.statusCode}');
   }
 
   static Future<bool> deleteMember(String memberId, WidgetRef ref) async {
-    final response = await AuthenticatedHttpClient.delete(ApiUrls.member(memberId));
+    final response =
+        await MyAuthenticatedHttpClient.delete(ApiUrls.member(memberId));
 
     if (response.statusCode == 204) {
       ref.read(membersProvider.notifier).removeMember(memberId);

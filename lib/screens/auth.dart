@@ -24,14 +24,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _passwordController = TextEditingController();
 
   String? emailValidator(String? enteredEmail) {
-    if (enteredEmail == null || enteredEmail.trim().isEmpty || !enteredEmail.contains('@')) {
+    if (enteredEmail == null ||
+        enteredEmail.trim().isEmpty ||
+        !enteredEmail.contains('@')) {
       return 'Por favor, digite um endereço de email válido';
     }
     return null;
   }
 
   String? passwordValidator(String? enteredPassword) {
-    if (enteredPassword == null || enteredPassword.trim().length < minPasswordLength) {
+    if (enteredPassword == null ||
+        enteredPassword.trim().length < minPasswordLength) {
       return 'Senhas devem ter pelo menos $minPasswordLength caracteres';
     }
     return null;
@@ -47,7 +50,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     try {
       ref.read(loadingStateProvider.notifier).setLoading(true);
 
-      final response = await HttpClient.post(ApiUrls.login, {
+      final response = await MyHttpClient.post(ApiUrls.login, {
         'email': _emailController.text,
         'password': _passwordController.text,
       });
@@ -76,6 +79,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           'error: $e',
           durationSeconds: 6,
         );
+        print('error $e');
       }
     } finally {
       ref.read(loadingStateProvider.notifier).setLoading(false);
@@ -138,7 +142,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                 : ElevatedButton(
                                     onPressed: handleSubmitLoginForm,
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
                                     ),
                                     child: const Text('Entrar'),
                                   );

@@ -1,14 +1,18 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AuthenticatedHttpClient {
+final _httpClient =
+    IOClient(HttpClient()..badCertificateCallback = (X509Certificate cert, String host, int port) => true);
+
+class MyAuthenticatedHttpClient {
   static Future<http.Response> get(Uri url) async {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'auth_token');
 
-    final response = await http.get(
+    final response = await _httpClient.get(
       url,
       headers: {
         HttpHeaders.authorizationHeader: 'Token $token',
@@ -22,7 +26,7 @@ class AuthenticatedHttpClient {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'auth_token');
 
-    final response = await http.put(
+    final response = await _httpClient.put(
       url,
       body: jsonEncode(payload),
       headers: {
@@ -39,7 +43,7 @@ class AuthenticatedHttpClient {
 
     print('payload $payload');
 
-    final response = await http.post(
+    final response = await _httpClient.post(
       url,
       body: jsonEncode(payload),
       headers: {
@@ -54,7 +58,7 @@ class AuthenticatedHttpClient {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: 'auth_token');
 
-    final response = await http.delete(
+    final response = await _httpClient.delete(
       url,
       headers: {
         HttpHeaders.authorizationHeader: 'Token $token',
@@ -65,9 +69,9 @@ class AuthenticatedHttpClient {
   }
 }
 
-class HttpClient {
+class MyHttpClient {
   static Future<http.Response> post(Uri url, Map body) async {
-    final response = await http.post(
+    final response = await _httpClient.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
