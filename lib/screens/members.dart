@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:birthday_app/api_urls.dart';
 import 'package:birthday_app/components/create_member_button.dart';
 import 'package:birthday_app/components/error_dialog.dart';
@@ -66,15 +67,13 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       if (e.message.contains('Connection refused')) {
         showErrorDialog(
           context,
-          content:
-              'Não foi possível trazer a lista de membros. Talvez houve um problema com o servidor.',
+          content: 'Não foi possível trazer a lista de membros. Talvez houve um problema com o servidor.',
           action: fetchMembers,
         );
       } else if (e.message.contains('Connection failed')) {
         showErrorDialog(
           context,
-          content:
-              'Não foi possível trazer a lista de membros. Você tem certeza de que está conectado à internet?',
+          content: 'Não foi possível trazer a lista de membros. Você tem certeza de que está conectado à internet?',
           action: fetchMembers,
         );
       } else {
@@ -83,6 +82,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           content: 'Não foi possível trazer a lista de membros.',
           action: fetchMembers,
         );
+        log('error when fetching members $e');
       }
     } catch (e) {
       showErrorDialog(
@@ -104,9 +104,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       return;
     }
 
-    showErrorDialog(context,
-        content:
-            'Não foi possível excluir o membro ${member.name.toUpperCase()}');
+    showErrorDialog(context, content: 'Não foi possível excluir o membro ${member.name.toUpperCase()}');
   }
 
   Future<void> handleLogout() async {
@@ -149,8 +147,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
       if (e.message.contains('Connection refused')) {
         showErrorDialog(
           context,
-          content:
-              'Não foi possível atualizar membro. Talvez houve um problema com o servidor.',
+          content: 'Não foi possível atualizar membro. Talvez houve um problema com o servidor.',
         );
       } else {
         showErrorDialog(
@@ -171,12 +168,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
           'Todos os membros',
           style: TextStyle(color: Colors.white),
         ),
-        actions: [
-          IconButton(
-              color: Colors.white,
-              onPressed: handleLogout,
-              icon: const Icon(Icons.exit_to_app))
-        ],
+        actions: [IconButton(color: Colors.white, onPressed: handleLogout, icon: const Icon(Icons.exit_to_app))],
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Center(
@@ -194,8 +186,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen> {
                           ? const Center(
                               child: Padding(
                                 padding: EdgeInsets.all(32),
-                                child: Text(
-                                    'Nenhum membro cadastrado, clique no botão acima para incluir um membro'),
+                                child: Text('Nenhum membro cadastrado, clique no botão acima para incluir um membro'),
                               ),
                             )
                           : ListView.builder(
